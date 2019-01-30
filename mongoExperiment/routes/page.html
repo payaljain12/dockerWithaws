@@ -1,0 +1,108 @@
+
+
+<html>
+
+    <head> 
+    <title> Name from database MONGODB </title>
+    </head>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script>
+    
+    /* For saving the contents dynamically */
+
+        $(document).ready(function() {
+            /* When save is clicked call the fuction for operations to be 
+               performed */
+            $("#Save").click(function(e) {
+                e.preventDefault();
+                
+                /* Create an object to store all the data  */
+                var person = {};
+                     
+                person.firstName = $("#fname").val();
+                person.lastName = $("#lname").val();
+               
+                /* Data to be sent back to the server */
+    
+                $.ajax ( {
+                    url : '/users/testAdd',
+                    type : 'POST',
+                    data : person,
+                    success : function(response) {
+                        console.log("Success in sending");
+                    }, 
+                    failure : function(response) {
+                        console.log("Failure in sending");
+                    }
+                })
+            })
+
+              /* Api for delete */
+
+            $("#delete").click(function(e) {
+                e.preventDefault(); 
+                var person = {};
+                /* Send the person name to be deleted present in id = dfname */
+                person.firstName = $("#dfname").val();
+                person.lastName = $("#dlname").val();
+                $.ajax({
+                    type : 'DELETE',
+                    url : '/users/delete',
+                    data : person,
+                    success : function(response) {
+                        console.log("success in deleting");
+                    },
+                    failure : function(response) {
+                        console.log("failure in deleting");
+                    }
+                })
+            })
+
+            /* Api for display */
+            $("#Display").click(function(e) {
+                e.preventDefault();
+               
+               $.ajax({
+                   type : 'GET',
+                   url : '/users/display',
+                   success : function(response) {
+                       /* body content i.e., present html page sud be replaced with the content table of db */
+                       $("body").replaceWith(response);
+
+                   },
+                   failure : function(response) {
+                       console.log("Failed to display");
+                   }
+               })
+
+            })
+            
+        })//End of doc ready
+    </script>
+    
+    <body>
+    
+        <form>
+            <!-- For saving the content -->
+            First Name <input type = "text" id = "fname" />  
+            Last Name <input type = "text"  id = "lname" />
+            <br>
+            <br>
+            <button type = "button" id = "Save"> Save</button>
+            <br>
+            <br>
+
+            First Name <input type = "text" id = "dfname" />  
+            Last Name <input type = "text"  id = "dlname" />
+            <br>
+            <br>
+            <button type = "button" id = "delete"> Delete</button>
+            <br>
+            <br>
+            
+            Display the database table <button type = "button" id = "Display"> Display </button>
+        </form>
+    </body>
+    </html>
